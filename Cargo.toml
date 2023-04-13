@@ -1,0 +1,29 @@
+[package]
+name = "tests_bin"
+version = "0.1.0"
+edition = "2021"
+authors = ["NickelAnge.Studio <rust@nickelange.studio>"]
+description = "Simple crate to organize your unit tests in another folder."
+keywords = ["unit", "tests", "organizer", "folder", "simple"]
+categories = ["development-tools", "development-tools::testing" ]
+repository = "https://github.com/NickelAngeStudio/cfg_boost"
+homepage = "https://github.com/NickelAngeStudio/cfg_boost/wiki"
+license = "MIT"
+readme = "README.md"
+
+# List of excluded files
+exclude = [
+    "target/*",
+    "img/*",
+    "tests/*",
+    ".git/*",
+    ".vscode/*",
+    ".cargo/*",
+    ".github/*",
+    ".gitignore",
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
