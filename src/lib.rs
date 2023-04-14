@@ -1,10 +1,10 @@
-//! This [Crate](https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html) is aimed toward [Rustacean](https://rustaceans.org/) who wish to have a bin folder where they can easily
-//! unload all their unit tests with a relative path.
+//! This [crate](https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html) is aimed toward [Rustacean](https://rustaceans.org/) who wish to have a bin folder where they can easily
+//! unload all their unit tests to clean their `src` folder.
 //! 
 //! **The legacy way to do it right now is like this :**
 //! ```
-//! // We supposed we put our unit tests in `tests/unit` and we wish 
-//! // to link from a file in src/folder1/myfile.rs
+//! // We supposed we put our unit tests in `{project folder}/tests/unit` and we wish 
+//! // to link a test module from a file in src/folder1/myfile.rs
 //! #[cfg(test)]
 //! #[path = "../../tests/unit/mytest.rs"] // Path is relative to myfile.rs
 //! mod mytests;
@@ -32,8 +32,9 @@
 //! pub fn to_test() {
 //! }
 //! ```
+//! *No subfolder `../` and refactoring won't break the path.*
 //! 
-//! **By default, the tests bin folder is `{project folder}/tests/unit`**
+//! **By default, the tests bin folder is `{project folder}/tests/unit`**<br>
 //! This can be changed. [See here](https://github.com/NickelAngeStudio/tests_bin/wiki#modifying-bin-default-folder)
 
 use proc_macro::TokenStream;
