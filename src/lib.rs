@@ -46,8 +46,9 @@ mod config;
 /// Error enumeration mod
 mod errors;
 
+#[allow(non_snake_case)]
 #[proc_macro]
-pub fn unit_tests_bin(attr: TokenStream) -> TokenStream {
+pub fn unit__tests(attr: TokenStream) -> TokenStream {
 
      // Content tokens accumulator
      let mut content = TokenStream::new();

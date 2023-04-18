@@ -1,7 +1,7 @@
 {
   "name": "rust-tests-bin",
   "displayName": "rust-tests-bin",
-  "description": "",
+  "description": "rust-tests-bin",
   "version": "0.0.1",
   "publisher": "NickelAngeStudio",
   "engines": {
@@ -15,10 +15,37 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Rust Tests Bin",
+      "properties": {
+        "rust-tests-bin.openAfterCreate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open created unit tests file."
+        },
+        "rust-tests-bin.deleteEmptyFolder": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically delete empty folders after renaming unit tests file."
+        },
+        "rust-tests-bin.verifyIfComment": {
+          "type": "boolean",
+          "default": true,
+          "description": "Verify if macro is commented before applying shortcut."
+        },
+        "rust-tests-bin.createdFileContent": {
+          "editPresentation": "multilineText",
+          "type": "string",
+          "default": "/// Unit test description\n#[test]\nfn unit_test(){\n\n}\n\n/// Ignored test description\n#[test]\n#[ignore = \"Must be executed manually\"]\nfn ignored_test(){\n\n}",
+          "description": "Default content of created unit tests file."
+        }
+      }
+    },
     "commands": [
       {
-        "command": "rust-tests-bin.burnBaby",
-        "title": "Burn Baby"
+        "title": "Refresh rust-tests-bin path",
+        "command": "rust-tests-bin.refresh",
+        "category": "Refresh"
       }
     ]
   },
