@@ -25,7 +25,11 @@ const CONFIG_VALUE_REGEX = /\"(.*)\"/i;
 // Regex for file name validation. Ref : https://digitalfortress.tech/tips/top-15-commonly-used-regex/
 const FILE_NAME_VALIDATION_REGEX = /^[\w,\s-\/]+\.rs$/;
 
-
+/**
+ * Create a new unit tests file filled with default content
+ * @param filename Current filename
+ * @returns New filename or undefined
+ */
 export async function create_tests_file(filename : string) : Promise<string | undefined> {
 
     const result = await vscode.window.showInputBox(show_input_box_options('Create new unit tests file', filename));
@@ -51,7 +55,7 @@ export async function create_tests_file(filename : string) : Promise<string | un
 
             // 5. Open file created if option is enabled.
             if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('openAfterCreate'))
-                vscode.window.showTextDocument(vscode.Uri.file(full_path));
+                open_file_in_vscode(result);
 
         } catch (error) {
             return Promise.reject(error);
@@ -59,6 +63,102 @@ export async function create_tests_file(filename : string) : Promise<string | un
     }
 
     return result;
+}
+
+/**
+ * Open the tests bin base folder.
+ */
+export function open_tests_bin_folder() {
+
+    // 1. Create folder path if not exists
+    create_folder_path(tests_bin_folder + "ignore.rs")
+
+    // 2. Open folder with revealFileInOS command.
+    vscode.commands.executeCommand("revealFileInOS",
+        vscode.Uri.parse(tests_bin_folder));
+}
+
+/**
+ * Rename a unit tests file.
+ * @param current_filename Current filename
+ * @returns New filename or undefined
+ */
+export async function rename_tests_file(current_filename : string) : Promise<string | undefined> {
+
+    let result = await vscode.window.showInputBox(show_input_box_options('Rename unit tests file', current_filename));
+
+    // If input wasn't canceled.
+    if(result != undefined){
+
+        if(result.trim() !== current_filename.trim()){  // Only if new path is different from old path
+
+            let full_path_old = tests_bin_folder + current_filename;
+            let full_path_new = tests_bin_folder + result;
+
+            try {
+                // 1. Create full folder path for new path
+                create_folder_path(full_path_new);
+
+                // 2. Rename file
+                fs.renameSync(full_path_old, full_path_new);
+
+                // 3. Delete empty folders if enabled (except base folder)
+                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('deleteEmptyFolder'))
+                    delete_empty_folders(current_filename);
+
+                // 4. Open new file if option enabled
+                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('openAfterRename'))
+                    open_file_in_vscode(result);
+
+            } catch (error) {
+                return Promise.reject(error);
+            }
+        } else {
+            result = undefined; // Set result as undefined since nothing changed.
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Delete empty folders after renaming a file
+ * @param filename Previous file name.
+ */
+export function delete_empty_folders(filename : string){
+
+    // Split filename at / to get folders
+    let folders = filename.split(/\//g);
+
+    // Navigate from last folder (excluding filename) to first folder.
+    for(let i = folders.length - 1; i > 0; i--){
+        let folder = tests_bin_folder;  // Folder path accumulator
+
+        for(let j = 0; j < i; j++){     // Create full folder path
+            folder += folders[j] + "/";
+        }
+
+        try {
+            // Try to delete folder. If not empty, will result in error.
+            fs.rmdirSync(folder);
+        } catch (error) {
+            return; // If any error occured, stop trying to delete folders.
+        }
+    }
+}
+
+/**
+ * Open a file relative to file bin.
+ * @param filename  Filename relative to tests bin to open in visual studio 
+ */
+export function open_file_in_vscode(filename : string){
+
+    // Get full path of the file
+    let full_path = tests_bin_folder + filename;
+
+    // Open file in visual studio
+    vscode.window.showTextDocument(vscode.Uri.file(full_path));
+
 }
 
 /**

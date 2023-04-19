@@ -90,13 +90,15 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 			arguments: [param]
 		}));
 
-		// Rename file codelens
-		this.codeLenses.push(new vscode.CodeLens(range, {
-			title: "Rename file",
-			tooltip: "Rename tests file from bin.",
-			command: "rust-tests-bin.rename",
-			arguments: [param]
-		}));
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showRenameFile')){	// Only if enabled
+			// Rename file codelens
+			this.codeLenses.push(new vscode.CodeLens(range, {
+				title: "Rename file",
+				tooltip: "Rename tests file from bin.",
+				command: "rust-tests-bin.rename",
+				arguments: [param]
+			}));
+		}
 	}
 
 	/**

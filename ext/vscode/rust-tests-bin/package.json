@@ -23,10 +23,25 @@
           "default": true,
           "description": "Automatically open created unit tests file."
         },
+        "rust-tests-bin.openAfterRename": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically open renamed unit tests file."
+        },
         "rust-tests-bin.deleteEmptyFolder": {
           "type": "boolean",
           "default": true,
           "description": "Automatically delete empty folders after renaming unit tests file."
+        },
+        "rust-tests-bin.showRenameFile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show `Rename file` shortcut."
+        },
+        "rust-tests-bin.showInStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show `tests_bin` in status bar. (Reload required)"
         },
         "rust-tests-bin.createdFileContent": {
           "editPresentation": "multilineText",
@@ -41,7 +56,33 @@
         "title": "Refresh rust-tests-bin path",
         "command": "rust-tests-bin.refresh",
         "category": "Refresh"
+      },
+      {
+        "title": "Open rust-tests-bin status bar menu",
+        "command": "rust-tests-bin.statusBarMenu",
+        "category": "Menu"
+      },
+      {
+        "title": "Reload `rust-tests-bin` extension",
+        "command": "rust-tests-bin.reload",
+        "category": "Reload"
+      },
+      {
+        "title": "Toggle rust-tests-bin `Rename file` shortcut",
+        "command": "rust-tests-bin.toggleRename",
+        "category": "Settings"
+      },
+      {
+        "title": "Open rust-tests-bin base unit tests folder",
+        "command": "rust-tests-bin.openFolder",
+        "category": "Explorer"
       }
+
+      
+
+      
+
+      
     ]
   },
   "scripts": {
