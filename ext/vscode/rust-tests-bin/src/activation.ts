@@ -69,7 +69,6 @@ export function create_status_bar(context: vscode.ExtensionContext) {
 
 }
 
-
 /**
  * Register the refresh command used to refresh paths.
  * @param context Context of extension

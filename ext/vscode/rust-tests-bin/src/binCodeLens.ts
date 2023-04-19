@@ -82,9 +82,10 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 * @param param Macro parameters.
 	 */
 	private create_codelens_for_existing_file(range: vscode.Range, param: [string, vscode.Range | vscode.Position]) {
+
 		// Open file codelens
 		this.codeLenses.push(new vscode.CodeLens(range, {
-			title: "Open file",
+			title: this.get_shortcut_title("folder-opened", "Open file"),
 			tooltip: "Open unit tests file from bin.",
 			command: "rust-tests-bin.open",
 			arguments: [param]
@@ -93,7 +94,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showRenameFile')){	// Only if enabled
 			// Rename file codelens
 			this.codeLenses.push(new vscode.CodeLens(range, {
-				title: "Rename file",
+				title: this.get_shortcut_title("replace-all", "Rename file"),
 				tooltip: "Rename tests file from bin.",
 				command: "rust-tests-bin.rename",
 				arguments: [param]
@@ -110,7 +111,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 
 		// Create file codelens
 		this.codeLenses.push(new vscode.CodeLens(range, {
-			title: "Create file",
+			title: this.get_shortcut_title("new-file", "Create file"),
 			tooltip: "Create unit tests file in bin.",
 			command: "rust-tests-bin.create",
 			arguments: [param]
@@ -134,4 +135,26 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 		return is_commented;
 
 	}
+
+	/**
+	 * Get shortcut title according to shortcutDisplay configuration.
+	 * @param icon Icon to show
+	 * @param text Text to show
+	 * @returns status bar text formatted.
+	 */
+	private get_shortcut_title(icon : string, text : string) : string {
+
+		switch(vscode.workspace.getConfiguration('rust-tests-bin').get<string>('shortcutDisplay')){
+			case "iconOnly":
+				return "$(" + icon + ")";
+			
+			case "textOnly": 
+				return text;
+			
+			default:{
+				return "$(" + icon + ") " + text;
+			}
+		}
+	}
+
 }

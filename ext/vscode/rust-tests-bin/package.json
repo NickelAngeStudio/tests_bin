@@ -38,6 +38,17 @@
           "default": true,
           "description": "Show `Rename file` shortcut."
         },
+        "rust-tests-bin.shortcutDisplay": {
+          "type": "string",
+          "default": "iconText",
+          "enum": ["iconText", "iconOnly", "textOnly"],
+          "enumDescriptions": [
+            "Display shortcut icon and text",
+            "Display shortcut icon only",
+            "Display shortcut text only"
+          ],
+          "description": "Select how shortcut are displayed."
+        },
         "rust-tests-bin.showInStatusBar": {
           "type": "boolean",
           "default": true,

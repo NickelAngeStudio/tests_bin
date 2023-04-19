@@ -18,8 +18,6 @@ import * as activation from './activation';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	
 	
 	// 1. Verify if dependency "test_bins" is in Cargo.toml
 	if(fs.is_crate_added()) {
