@@ -5,6 +5,7 @@ use crate::errors::TestsBinErrors;
 // Contants
 const TESTS_BIN_BASE_FOLDER : &str = "tests/unit";                  // Default tests bin base folder
 const TESTS_BIN_BASE_FOLDER_KEY : &str = "tests_bin-folder";        // Key used to fetch custom base folder
+const CARGO_MANIFEST_DIR : &str = "CARGO_MANIFEST_DIR";             // Cargo manifest directory key
 const ILLEGAL_CHARACTER_REPLACE : char = '_';                       // Illegal character will be replaceby this
 const PARAMETERS_SEPARATOR : char = ',';                            // Parameters separator.
 
@@ -45,7 +46,10 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
                 let parameter = lit.to_string().replace("\"", "");  // Extract parameter and remove ""
 
                 if full_path == Option::None {  // If full_path has no value, it is the full path.
-                    full_path = Some(format!("{}/{}/{}", env!("CARGO_MANIFEST_DIR"), get_tests_bin_base_folder(), parameter));
+                    match std::env::var(CARGO_MANIFEST_DIR){
+                        Ok(value) => full_path = Some(format!("{}/{}/{}", value, get_tests_bin_base_folder(), parameter)),
+                        Err(_) => panic!("Env variable `{}` not set!", CARGO_MANIFEST_DIR),
+                    }
                 } else {    // Else it is the module name parameter.
                     module_name = Some(parameter);
                 }
