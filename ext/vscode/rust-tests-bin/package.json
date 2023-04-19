@@ -28,15 +28,10 @@
           "default": true,
           "description": "Automatically delete empty folders after renaming unit tests file."
         },
-        "rust-tests-bin.verifyIfComment": {
-          "type": "boolean",
-          "default": true,
-          "description": "Verify if macro is commented before applying shortcut."
-        },
         "rust-tests-bin.createdFileContent": {
           "editPresentation": "multilineText",
           "type": "string",
-          "default": "/// Unit test description\n#[test]\nfn unit_test(){\n\n}\n\n/// Ignored test description\n#[test]\n#[ignore = \"Must be executed manually\"]\nfn ignored_test(){\n\n}",
+          "default": "/// Unit test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\nfn unit_test(){\n\ttodo!()\n}\n\n/// Ignored test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\n#[ignore = \"Must be executed manually\"]\nfn ignored_test(){\n\ttodo!()\n}",
           "description": "Default content of created unit tests file."
         }
       }

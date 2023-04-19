@@ -1,4 +1,13 @@
-// This module contains function that access the file system
+/**
+ * Contains function that access the file system.
+ * 
+ * @author NickelAngeStudio <https://github.com/NickelAngeStudio>
+ * 
+ * @since 2023
+ * 
+ * @license MIT
+ */
+
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
@@ -45,7 +54,6 @@ export async function create_tests_file(filename : string) : Promise<string | un
                 vscode.window.showTextDocument(vscode.Uri.file(full_path));
 
         } catch (error) {
-            //console.log("error=", error);
             return Promise.reject(error);
         }
     }
@@ -104,7 +112,8 @@ function show_input_box_options(title : string, default_value : string) : vscode
  * @returns True if file exists in bin, false otherwise
  */
 export function is_file_in_bin(filename : string) : boolean {
-    return fs.existsSync(tests_bin_folder + filename);
+
+    return filename.trim() != "" && fs.existsSync(tests_bin_folder + filename);
 }
 
 /**

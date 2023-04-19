@@ -1,3 +1,13 @@
+/**
+ * Contains extension command definition and activation script.
+ * 
+ * @author NickelAngeStudio <https://github.com/NickelAngeStudio>
+ * 
+ * @since 2023
+ * 
+ * @license MIT
+ */
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
@@ -53,26 +63,34 @@ function register_code_lens() {
 	vscode.languages.registerCodeLensProvider('rust', binCodeLensProvider);
 
 	// Command to open the unit test file
-	vscode.commands.registerCommand("rust-tests-bin.open", (args: [string, string]) => {
+	vscode.commands.registerCommand("rust-tests-bin.open", (args: [string, vscode.Range | vscode.Position]) => {
 		//vscode.window.showInformationMessage(`${tests_bin_folder} action clicked with args=${args}`);
 	});
 
 	// Command to rename the unit test file
-	vscode.commands.registerCommand("rust-tests-bin.rename", (args: [string, string]) => {
+	vscode.commands.registerCommand("rust-tests-bin.rename", (args: [string, vscode.Range | vscode.Position]) => {
 		//vscode.window.showInformationMessage(`${tests_bin_folder} action clicked with args=${args}`);
 	});
 
 	// Command to create the unit test file
-	vscode.commands.registerCommand("rust-tests-bin.create", async (args: [string, string]) => {
+	vscode.commands.registerCommand("rust-tests-bin.create", async (args: [string, vscode.Range | vscode.Position]) => {
 		
 		let result = create_tests_file(args[0]);
-
 
 		result.then( (filename) => {
 			// If input wan't canceled.
 			if(filename != undefined) {
 				// Write macro parameters with filename
-				console.log("Filename=", filename);
+				const textEditor = vscode.window.activeTextEditor;
+
+				if(textEditor){
+					textEditor.edit( builder => {
+						if(typeof args[1] === typeof vscode.Position)	// We insert since no "" defined.
+							builder.insert(<vscode.Position>args[1], "\"" + filename + "\"")
+						else	// Replace content in ""
+							builder.replace(<vscode.Range>args[1], "\"" + filename + "\"");
+					});
+				}
 			}
 		}).catch ( (error) => {
 			// Show error message
