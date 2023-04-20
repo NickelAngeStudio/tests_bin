@@ -1,13 +1,13 @@
 [package]
 name = "tests_bin"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 authors = ["NickelAnge.Studio <rust@nickelange.studio>"]
-description = "Simple crate aimed toward Rustacean who wish to have a bin folder where they can easily unload all their unit tests to clean their src folder. VSCode extension included!"
-keywords = ["unit", "tests", "organizer", "folder", "simple"]
+description = "Simple solution to organize unit tests. VSCode extension included!"
+keywords = ["unit", "tests", "tests_bin", "organize", "simple"]
 categories = ["development-tools", "development-tools::testing" ]
-repository = "https://github.com/NickelAngeStudio/cfg_boost"
-homepage = "https://github.com/NickelAngeStudio/cfg_boost/wiki"
+repository = "https://github.com/NickelAngeStudio/tests_bin"
+homepage = "https://github.com/NickelAngeStudio/tests_bin/wiki"
 license = "MIT"
 readme = "README.md"
 
@@ -26,8 +26,6 @@ exclude = [
     "tests_bin_ext.png"
 
 ]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
 proc-macro = true
