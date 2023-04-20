@@ -5,7 +5,7 @@
 //! 
 //! *Include a VSCode extension for quick shortcuts like create tests file, rename file and more. [See here!](https://github.com/NickelAngeStudio/tests_bin/wiki/Extension)*
 //! 
-//! <img src="https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin_ext.png" width="865" height="235"><br>
+//! <img src="https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin_ext.png" width="600" height="160"><br>
 //! 
 //! [Get more details on the wiki here!](https://github.com/NickelAngeStudio/tests_bin/wiki)
 
