@@ -30,8 +30,8 @@ pub fn add(left: usize, right: usize) -> usize {
 ```
 
 ## Syntax
-**Without [item](https://doc.rust-lang.org/reference/items.html) :** `unit__tests!("relative_path.rs" {, "module name"});`<br>
-**With an [item](https://doc.rust-lang.org/reference/items.html) :** `#[unit_tests("relative_path.rs" {, "module name"})] item`<br>
+Without [item](https://doc.rust-lang.org/reference/items.html) : `unit__tests!("relative_path.rs" {, "module name"});`<br>
+With an [item](https://doc.rust-lang.org/reference/items.html) : `#[unit_tests("relative_path.rs" {, "module name"})] item`<br>
 <sub>*The element in `{}` are optional. The extension `.rs` is required.*</sub>
 
 ## License
