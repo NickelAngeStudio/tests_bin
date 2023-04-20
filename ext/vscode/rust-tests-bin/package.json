@@ -1,19 +1,32 @@
 {
   "name": "rust-tests-bin",
-  "displayName": "rust-tests-bin",
-  "description": "rust-tests-bin",
+  "displayName": "Tests bin for Rust",
+  "description": "Official `tests_bin` crate extension for Rust. Provide codeLens shortcut to easily manage unit tests.",
   "version": "1.0.0",
   "publisher": "NickelAngeStudio",
+  "author": {
+    "name" : "NickelAngeStudio",
+    "url": "https://github.com/NickelAngeStudio"
+  },
   "license": "MIT",
   "engines": {
-    "vscode": "^1.77.0"
+    "vscode": "^1.56.0"
   },
   "categories": [ "Programming Languages", "Testing", "Other" ],
   "keywords": [ "tests_bin", "rust", "test", "folder", "bin" ],
   "sponsor": {
     "url": "https://github.com/sponsors/NickelAngeStudio"
   },
-  "icon": "tests_bin.png",
+  "icon": "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png",
+  "galleryBanner": {
+    "color": "#E65C00",
+    "theme": "light"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickelAngeStudio/tests_bin.git"
+  },
+  "homepage": "https://github.com/NickelAngeStudio/tests_bin",
   "activationEvents": [
     "onLanguage:rust"
   ],
@@ -35,12 +48,17 @@
         "rust-tests-bin.deleteEmptyFolder": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically delete empty folders after renaming unit tests file."
+          "description": "Automatically delete empty folders after renaming / deleting unit tests file."
         },
         "rust-tests-bin.showRenameFile": {
           "type": "boolean",
           "default": true,
           "description": "Show `Rename file` shortcut."
+        },
+        "rust-tests-bin.showDeleteFile": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show `Delete file` shortcut."
         },
         "rust-tests-bin.shortcutDisplay": {
           "type": "string",
@@ -88,6 +106,11 @@
         "category": "Settings"
       },
       {
+        "title": "Toggle rust-tests-bin `Delete file` shortcut",
+        "command": "rust-tests-bin.toggleDelete",
+        "category": "Settings"
+      },
+      {
         "title": "Toggle rust-tests-bin `codeLens`",
         "command": "rust-tests-bin.toggleCodeLens",
         "category": "Settings"
@@ -114,16 +137,11 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.77.0",
-    "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.1",
+    "@types/vscode": "^1.56.0",
     "@types/node": "16.x",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
-    "glob": "^8.1.0",
-    "mocha": "^10.2.0",
-    "typescript": "^4.9.5",
-    "@vscode/test-electron": "^2.3.0"
+    "typescript": "^3.3.0"
   }
 }

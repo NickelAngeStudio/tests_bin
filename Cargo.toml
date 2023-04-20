@@ -3,7 +3,7 @@ name = "tests_bin"
 version = "0.1.0"
 edition = "2021"
 authors = ["NickelAnge.Studio <rust@nickelange.studio>"]
-description = "Simple crate aimed toward Rustacean who wish to have a bin folder where they can easily unload all their unit tests to clean their src folder."
+description = "Simple crate aimed toward Rustacean who wish to have a bin folder where they can easily unload all their unit tests to clean their src folder. VSCode extension included!"
 keywords = ["unit", "tests", "organizer", "folder", "simple"]
 categories = ["development-tools", "development-tools::testing" ]
 repository = "https://github.com/NickelAngeStudio/cfg_boost"
@@ -15,12 +15,16 @@ readme = "README.md"
 exclude = [
     "target/*",
     "img/*",
+    "ext/*",
     "tests/*",
     ".git/*",
     ".vscode/*",
     ".cargo/*",
     ".github/*",
     ".gitignore",
+    "tests_bin.png",
+    "tests_bin_ext.png"
+
 ]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

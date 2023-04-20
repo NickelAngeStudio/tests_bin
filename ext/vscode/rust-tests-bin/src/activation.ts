@@ -32,23 +32,27 @@ class StatusBarQuickPickItem implements vscode.QuickPickItem {
 
 }
 
-let quickRefresh =  new StatusBarQuickPickItem("Refresh base folder", 
+let quickRefresh =  new StatusBarQuickPickItem("$(sync) Refresh base folder", 
     "Refresh `tests_bin` base folder after change in `.cargo/config.toml`.", 
     "rust-tests-bin.refresh");
 
-let quickReload =  new StatusBarQuickPickItem("Reload `rust-tests-bin`", 
+let quickReload =  new StatusBarQuickPickItem("$(refresh) Reload `rust-tests-bin`", 
     "Reload `rust-tests_bin` extension for setting changes.", 
     "rust-tests-bin.reload");
 
-let quickToggleRename =  new StatusBarQuickPickItem("Toggle `Rename file` shortcut", 
+let quickToggleRename =  new StatusBarQuickPickItem("Toggle `$(replace-all) Rename file` shortcut", 
     "Hide / show the `Rename file` shortcut of unit tests macro.", 
     "rust-tests-bin.toggleRename");
 
-let quickOpenFolder =  new StatusBarQuickPickItem("Open `tests_bin` base folder", 
+let quickToggleDelete =  new StatusBarQuickPickItem("Toggle `$(trash) Delete file` shortcut", 
+    "Hide / show the `Delete file` shortcut of unit tests macro.", 
+    "rust-tests-bin.toggleDelete");
+
+let quickOpenFolder =  new StatusBarQuickPickItem("$(folder) Open `tests_bin` base folder", 
     "Open `tests_bin` base folder in explorer.", 
     "rust-tests-bin.openFolder");
 
-let quickToggleCodeLens =  new StatusBarQuickPickItem("Toggle `codeLens`", 
+let quickToggleCodeLens =  new StatusBarQuickPickItem("Toggle `$(inspect) codeLens`", 
 	"Hide / Show shortcuts above `unit_tests` macros.", 
 	"rust-tests-bin.toggleCodeLens");
 
@@ -93,7 +97,7 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 
         // Create quick pick with options
 		const quickPick = vscode.window.createQuickPick();		
-		quickPick.items = [ quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleCodeLens ];
+		quickPick.items = [ quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
 
         // Register quick pick events
 		quickPick.onDidChangeSelection(selection => {
@@ -128,6 +132,11 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 	// C6. Toggle `codeLens` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleCodeLens', () => {
 		toggle_boolean_configuration("showCodeLens", "`codeLens` shortcut");        
+    }));
+
+	// C7. Toggle `Delete file` shortcut.
+    context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleDelete', () => {
+		toggle_boolean_configuration("showDeleteFile", "`Delete file` shortcut");         
     }));
 }
 
@@ -186,6 +195,22 @@ export function register_code_lens() {
 			// Show error message
 			vscode.window.showErrorMessage(error.toString());
 		});
+	});
+
+	// Command to rename the delete test file
+	vscode.commands.registerCommand("rust-tests-bin.delete", (args: [string, vscode.Range | vscode.Position]) => {
+
+		let result = fs.delete_tests_file(args[0]);
+
+		result.then( (is_deleted) => {
+			if(is_deleted){		// Show deletion confirmation.
+				vscode.window.showInformationMessage('`' + args[0] + '` deleted.');
+			}
+		}).catch ( (error) => {
+			// Show error message
+			vscode.window.showErrorMessage(error.toString());
+		});
+	
 	});
 
 	// Command to create the unit test file

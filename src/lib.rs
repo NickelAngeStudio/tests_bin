@@ -1,41 +1,13 @@
+#![doc(html_logo_url = "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png")]
+#![doc(html_favicon_url = "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png")]
 //! This [crate](https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html) is aimed toward [Rustacean](https://rustaceans.org/) who wish to have a bin folder where they can easily
-//! unload all their unit tests to clean their `src` folder.
+//! unload all their unit tests to clean their `src` folder. 
 //! 
-//! **The legacy way to do it right now is like this :**
-//! ```
-//! // We supposed we put our unit tests in `{project folder}/tests/unit` and we wish 
-//! // to link a test module from a file in src/folder1/myfile.rs
-//! #[cfg(test)]
-//! #[path = "../../tests/unit/mytest.rs"] // Path is relative to myfile.rs
-//! mod mytests;
+//! *Includes a VSCode extension to add quick shortcuts like create file, rename file and more. [See here!](TODO_LINK)*
 //! 
-//! pub fn to_test() {
-//! }
-//! ```
+//! <img src="https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin_ext.png" width="600" height="160"><br>
 //! 
-//! *Each subfolder add an extra `../` and refactoring might break the path.*
-//! 
-//! **This crate offer those 2 options instead :**
-//! ```
-//! // We use an attribute for this function unit tests.
-//! // Module name is automatically generated.
-//! // Rust-analyzer will show `> Run Tests | Debug` above this.
-//! #[unit_tests("mytest.rs")]
-//! pub fn to_test() {
-//! }
-//! ```
-//! ```
-//! // We can also use a global macro instead but
-//! // we must define the module name as 2nd parameter.
-//! unit_tests_bin!("mytest.rs", "mytests");
-//! 
-//! pub fn to_test() {
-//! }
-//! ```
-//! *No subfolder `../` and refactoring won't break the path.*
-//! 
-//! **By default, the tests bin folder is `{project folder}/tests/unit`**<br>
-//! This can be changed. [See here](https://github.com/NickelAngeStudio/tests_bin/wiki#modifying-bin-default-folder)
+//! [Get more details on the wiki here!](https://github.com/NickelAngeStudio/tests_bin/wiki)
 
 use proc_macro::TokenStream;
 use crate::config::extract_unit_tests_parameters;
@@ -46,6 +18,7 @@ mod config;
 /// Error enumeration mod
 mod errors;
 
+/// Link a unit tests module without an [item](https://doc.rust-lang.org/reference/items.html).
 #[allow(non_snake_case)]
 #[proc_macro]
 pub fn unit__tests(attr: TokenStream) -> TokenStream {
@@ -53,8 +26,8 @@ pub fn unit__tests(attr: TokenStream) -> TokenStream {
      // Content tokens accumulator
      let mut content = TokenStream::new();
 
-     // 1. Extract parameters from attributes and empty tokenstream
-     let parameters = extract_unit_tests_parameters(attr.clone(), TokenStream::new());
+     // 1. Extract parameters from attributes and parsed attributes
+     let parameters = extract_unit_tests_parameters(attr.clone(), attr.to_string().replace("\"", "").parse::<TokenStream>().unwrap());
  
      // 2. Add unit test module definition
      content.extend(format!("#[cfg(test)]#[path = \"{}\"]mod {};", parameters.full_path, parameters.module_name).parse::<TokenStream>().unwrap());
@@ -64,6 +37,7 @@ pub fn unit__tests(attr: TokenStream) -> TokenStream {
 
 }
 
+/// Link a unit tests module with an [item](https://doc.rust-lang.org/reference/items.html).
 #[proc_macro_attribute]
 pub fn unit_tests(attr: TokenStream, item: TokenStream) -> TokenStream {
 
