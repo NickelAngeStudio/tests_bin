@@ -104,6 +104,16 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 				arguments: [param]
 			}));
 		}
+
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showDeleteFile')){	// Only if enabled
+			// Delete file codelens
+			this.codeLenses.push(new vscode.CodeLens(range, {
+				title: this.get_shortcut_title("trash", "Delete file"),
+				tooltip: "Delete tests file from bin.",
+				command: "rust-tests-bin.delete",
+				arguments: [param]
+			}));
+		}
 	}
 
 	/**

@@ -65,6 +65,34 @@ export async function create_tests_file(filename : string) : Promise<string | un
     return result;
 }
 
+export async function delete_tests_file(filename : string) : Promise<boolean> {
+
+    // Show confirmation for delete
+    const answer = await vscode.window.showInformationMessage("Delete unit tests file `" + filename + "`?", "Yes", "No");
+
+    if (answer === "Yes") {
+        try {
+            // 1. Get full path
+            let full_path = tests_bin_folder + filename;
+
+            // 2. Delete file
+            fs.rmSync(full_path);
+
+            // 3. Delete empty folders if enabled (except base folder)
+            if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('deleteEmptyFolder'))
+                delete_empty_folders(filename);
+
+            // 4. Resolve result
+            return Promise.resolve(true);
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    } else {
+        return Promise.resolve(false);
+    }
+
+}
+
 /**
  * Open the tests bin base folder.
  */

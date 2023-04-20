@@ -26,6 +26,7 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
 
     let mut full_path : Option<String> = None;
     let mut module_name : Option<String> = None;
+    let mut separator : bool = false;
 
     // Extract parameters
     attr.into_iter().for_each(|token| {
@@ -38,7 +39,7 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
             
             proc_macro::TokenTree::Punct(punct) => {
                     match punct.as_char() {
-                        PARAMETERS_SEPARATOR => {},  // Only PARAMETERS_SEPARATOR allowed
+                        PARAMETERS_SEPARATOR => separator = true,  // Only PARAMETERS_SEPARATOR allowed
                         _ => panic!("{}", TestsBinErrors::IncorrectParameters.to_string()), // Anything else is a syntax error.
                     }
                 },
@@ -51,7 +52,11 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
                         Err(_) => panic!("Env variable `{}` not set!", CARGO_MANIFEST_DIR),
                     }
                 } else {    // Else it is the module name parameter.
-                    module_name = Some(parameter);
+                    if separator {
+                        module_name = Some(parameter);
+                    } else {
+                        panic!("{}", TestsBinErrors::IncorrectParameters.to_string()); // Misssing `,`separator.
+                    }
                 }
             },
 
@@ -62,9 +67,6 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
 
     // Generate module name if none for unit_tests attribute macros
     if module_name == Option::None {
-        if item.is_empty() {    // Empty tokenstream means unit__tests! macro parameters error.
-            panic!("{}", TestsBinErrors::IncorrectParameters.to_string());
-        }
         module_name = Some(generate_test_mod_name(item));
     }
 
