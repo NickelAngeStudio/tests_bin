@@ -49,31 +49,35 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	public provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
 
 		this.codeLenses = [];	// Reset codeLens array.
-		const text = document.getText();	// Get text from document.
-		const comments = parser.get_document_comment_ranges(document);	// Get comments ranges to make sure part found aren't commented.
 
-		// Reset regex
-		this.macroRegex.lastIndex = 0;
-	
-		let matches;
-		while ((matches = this.macroRegex.exec(text)) !== null) {
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showCodeLens')) {	// If codeLens are showed
+			const text = document.getText();	// Get text from document.
+			const comments = parser.get_document_comment_ranges(document);	// Get comments ranges to make sure part found aren't commented.
 
-			if(!this.is_commented(matches.index, comments)){	// Make sure match isn't commented
-				let param = parser.get_filename_range_position(document, matches);	// Get macro parameters
-				let range = parser.get_match_range(document, matches);	// Get macro range for codelens
+			// Reset regex
+			this.macroRegex.lastIndex = 0;
+		
+			let matches;
+			while ((matches = this.macroRegex.exec(text)) !== null) {
 
-				if(typeof param[1] === typeof vscode.Position) {	// Show create file since filename parameter not found
-					this.create_codelens_to_create_file(range, param);
-				} else {
-					if(is_file_in_bin(param[0])) 
-						this.create_codelens_for_existing_file(range, param);	// File exists, create Open file and Rename File codelens
-					else 
-						this.create_codelens_to_create_file(range, param);		// File doesn't exists, create Create file codelens
-				}
-			}		
+				if(!this.is_commented(matches.index, comments)){	// Make sure match isn't commented
+					let param = parser.get_filename_range_position(document, matches);	// Get macro parameters
+					let range = parser.get_match_range(document, matches);	// Get macro range for codelens
+
+					if(typeof param[1] === typeof vscode.Position) {	// Show create file since filename parameter not found
+						this.create_codelens_to_create_file(range, param);
+					} else {
+						if(is_file_in_bin(param[0])) 
+							this.create_codelens_for_existing_file(range, param);	// File exists, create Open file and Rename File codelens
+						else 
+							this.create_codelens_to_create_file(range, param);		// File doesn't exists, create Create file codelens
+					}
+				}		
+			}
 		}
 
 		return this.codeLenses;
+
 	}
 
 	/**
@@ -145,10 +149,10 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	private get_shortcut_title(icon : string, text : string) : string {
 
 		switch(vscode.workspace.getConfiguration('rust-tests-bin').get<string>('shortcutDisplay')){
-			case "iconOnly":
+			case "Icon only":
 				return "$(" + icon + ")";
 			
-			case "textOnly": 
+			case "Text only": 
 				return text;
 			
 			default:{
