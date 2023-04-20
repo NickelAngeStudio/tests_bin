@@ -48,6 +48,10 @@ let quickOpenFolder =  new StatusBarQuickPickItem("Open `tests_bin` base folder"
     "Open `tests_bin` base folder in explorer.", 
     "rust-tests-bin.openFolder");
 
+let quickToggleCodeLens =  new StatusBarQuickPickItem("Toggle `codeLens`", 
+	"Hide / Show shortcuts above `unit_tests` macros.", 
+	"rust-tests-bin.toggleCodeLens");
+
 
 
 
@@ -69,7 +73,6 @@ export function create_status_bar(context: vscode.ExtensionContext) {
 
 }
 
-
 /**
  * Register the refresh command used to refresh paths.
  * @param context Context of extension
@@ -90,7 +93,7 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 
         // Create quick pick with options
 		const quickPick = vscode.window.createQuickPick();		
-		quickPick.items = [ quickOpenFolder, quickRefresh , quickReload, quickToggleRename ];
+		quickPick.items = [ quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleCodeLens ];
 
         // Register quick pick events
 		quickPick.onDidChangeSelection(selection => {
@@ -109,26 +112,12 @@ export function register_refresh_command(context: vscode.ExtensionContext){
     
     // C3. Toggle `Rename file` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleRename', () => {
-
-        let current_value = vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showRenameFile');
-
-        // Update configuration
-        vscode.workspace.getConfiguration('rust-tests-bin').update("showRenameFile", !current_value);
-
-        // Show toggle value in message
-        if(!current_value){
-            vscode.window.showInformationMessage('`Rename file` shortcut activated.');
-        } else {
-            vscode.window.showInformationMessage('`Rename file` shortcut disabled.');
-        }
-        
+		toggle_boolean_configuration("showRenameFile", "`Rename file` shortcut");         
     }));
 
     // C4. Open tests_bin base folder.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.openFolder', () => {
-
         fs.open_tests_bin_folder();
-            
     }));
 
     // C5. Reload `rust-tests-bin` extension
@@ -136,6 +125,30 @@ export function register_refresh_command(context: vscode.ExtensionContext){
         vscode.commands.executeCommand("workbench.action.reloadWindow");
     }));
 
+	// C6. Toggle `codeLens` shortcut.
+    context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleCodeLens', () => {
+		toggle_boolean_configuration("showCodeLens", "`codeLens` shortcut");        
+    }));
+}
+
+/**
+ * Toggle a boolean configuration
+ * @param property Name of the configuration
+ * @param label Label used to confirm new state
+ */
+function toggle_boolean_configuration(property : string, label : string) {
+
+	let current_value = vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>(property);
+
+	// Update configuration
+	vscode.workspace.getConfiguration('rust-tests-bin').update(property, !current_value);
+
+	// Show toggle value in message
+	if(!current_value){
+		vscode.window.showInformationMessage(label + '` activated.');
+	} else {
+		vscode.window.showInformationMessage(label + '` disabled.');
+	}
 
 }
 

@@ -2,14 +2,18 @@
   "name": "rust-tests-bin",
   "displayName": "rust-tests-bin",
   "description": "rust-tests-bin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "NickelAngeStudio",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.77.0"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": [ "Programming Languages", "Testing", "Other" ],
+  "keywords": [ "tests_bin", "rust", "test", "folder", "bin" ],
+  "sponsor": {
+    "url": "https://github.com/sponsors/NickelAngeStudio"
+  },
+  "icon": "tests_bin.png",
   "activationEvents": [
     "onLanguage:rust"
   ],
@@ -38,10 +42,21 @@
           "default": true,
           "description": "Show `Rename file` shortcut."
         },
+        "rust-tests-bin.shortcutDisplay": {
+          "type": "string",
+          "default": "Icon and text",
+          "enum": ["Icon and text", "Icon only", "Text only"],
+          "description": "Select how shortcut are displayed."
+        },
         "rust-tests-bin.showInStatusBar": {
           "type": "boolean",
           "default": true,
           "description": "Show `tests_bin` in status bar. (Reload required)"
+        },
+        "rust-tests-bin.showCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show shortcut above `unit_tests` macros."
         },
         "rust-tests-bin.createdFileContent": {
           "editPresentation": "multilineText",
@@ -70,6 +85,11 @@
       {
         "title": "Toggle rust-tests-bin `Rename file` shortcut",
         "command": "rust-tests-bin.toggleRename",
+        "category": "Settings"
+      },
+      {
+        "title": "Toggle rust-tests-bin `codeLens`",
+        "command": "rust-tests-bin.toggleCodeLens",
         "category": "Settings"
       },
       {
