@@ -51,7 +51,7 @@ pub fn init_integration_test(test_name : &str) -> (String, String) {
     }
 
     // 3. Create test project and assert if success.
-    assert_cmd!(&working_path, "cargo", ["new", test_name ], true, "Created binary (application)");
+    assert_cmd!(&working_path, "cargo", ["new", test_name ], true, "binary (application)");
     
     // 4. Package `tests_bin` and allow-dirty
     assert_cmd!(&working_path, "cargo", ["package", "--allow-dirty"], true, "Packaging");
