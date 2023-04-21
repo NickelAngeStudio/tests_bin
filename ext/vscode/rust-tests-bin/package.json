@@ -35,52 +35,51 @@
     "configuration": {
       "title": "Rust Tests Bin",
       "properties": {
-        "rust-tests-bin.openAfterCreate": {
+        "rust-tests-bin.behavior.openAfterCreate": {
           "type": "boolean",
           "default": true,
           "description": "Automatically open created unit tests file."
         },
-        "rust-tests-bin.openAfterRename": {
+        "rust-tests-bin.behavior.openAfterRename": {
           "type": "boolean",
           "default": true,
           "description": "Automatically open renamed unit tests file."
         },
-        "rust-tests-bin.deleteEmptyFolder": {
+        "rust-tests-bin.behavior.deleteEmptyFolder": {
           "type": "boolean",
           "default": true,
           "description": "Automatically delete empty folders after renaming / deleting unit tests file."
         },
-        "rust-tests-bin.showRenameFile": {
+        "rust-tests-bin.display.showRenameFile": {
           "type": "boolean",
           "default": true,
           "description": "Show `Rename file` shortcut."
         },
-        "rust-tests-bin.showDeleteFile": {
+        "rust-tests-bin.display.showDeleteFile": {
           "type": "boolean",
           "default": false,
           "description": "Show `Delete file` shortcut."
         },
-        "rust-tests-bin.shortcutDisplay": {
+        "rust-tests-bin.display.shortcutDisplay": {
           "type": "string",
           "default": "Icon and text",
           "enum": ["Icon and text", "Icon only", "Text only"],
           "description": "Select how shortcut are displayed."
         },
-        "rust-tests-bin.showInStatusBar": {
+        "rust-tests-bin.display.showInStatusBar": {
           "type": "boolean",
           "default": true,
           "description": "Show `tests_bin` in status bar. (Reload required)"
         },
-        "rust-tests-bin.showCodeLens": {
+        "rust-tests-bin.display.showCodeLens": {
           "type": "boolean",
           "default": true,
           "description": "Show shortcut above `unit_tests` macros."
         },
-        "rust-tests-bin.createdFileContent": {
-          "editPresentation": "multilineText",
+        "rust-tests-bin.newFile.contentPath": {
           "type": "string",
-          "default": "/// Unit test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\nfn unit_test(){\n\ttodo!()\n}\n\n/// Ignored test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\n#[ignore = \"Must be executed manually\"]\nfn ignored_test(){\n\ttodo!()\n}",
-          "description": "Default content of created unit tests file."
+          "default": "${workspaceFolder}/.vscode/tests_bin_template.rs",
+          "markdownDescription": "Path to file which content will be copied into new unit tests file. [Click here to select file](command:rust-tests-bin.selectContentPath)"
         }
       }
     },
@@ -88,37 +87,47 @@
       {
         "title": "Refresh rust-tests-bin path",
         "command": "rust-tests-bin.refresh",
-        "category": "Refresh"
+        "category": "Settings"
       },
       {
         "title": "Open rust-tests-bin status bar menu",
         "command": "rust-tests-bin.statusBarMenu",
-        "category": "Menu"
+        "category": "Settings"
       },
       {
         "title": "Reload `rust-tests-bin` extension",
         "command": "rust-tests-bin.reload",
-        "category": "Reload"
+        "category": "Settings"
       },
       {
         "title": "Toggle rust-tests-bin `Rename file` shortcut",
         "command": "rust-tests-bin.toggleRename",
-        "category": "Settings"
+        "category": "Display"
       },
       {
         "title": "Toggle rust-tests-bin `Delete file` shortcut",
         "command": "rust-tests-bin.toggleDelete",
-        "category": "Settings"
+        "category": "Display"
       },
       {
         "title": "Toggle rust-tests-bin `codeLens`",
         "command": "rust-tests-bin.toggleCodeLens",
-        "category": "Settings"
+        "category": "Display"
       },
       {
         "title": "Open rust-tests-bin base unit tests folder",
         "command": "rust-tests-bin.openFolder",
-        "category": "Explorer"
+        "category": "Settings"
+      },
+      {
+        "title": "Select rust-tests-bin new unit tests file content path",
+        "command": "rust-tests-bin.selectContentPath",
+        "category": "Settings"
+      },
+      {
+        "title": "Open rust-tests-bin extension settings",
+        "command": "rust-tests-bin.openSettings",
+        "category": "Settings"
       }
 
       

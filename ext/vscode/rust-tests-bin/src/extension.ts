@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 	activation.register_refresh_command(context);
 
 	// 3. Create status bar element if enabled
-	if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showInStatusBar'))
+	if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showInStatusBar'))
 		activation.create_status_bar(context);
 
 }

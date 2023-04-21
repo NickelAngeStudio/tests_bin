@@ -25,6 +25,9 @@ const CONFIG_VALUE_REGEX = /\"(.*)\"/i;
 // Regex for file name validation. Ref : https://digitalfortress.tech/tips/top-15-commonly-used-regex/
 const FILE_NAME_VALIDATION_REGEX = /^[\w,\s-\/]+\.rs$/;
 
+// Used when no default file to copied content from
+const DEFAULT_NEW_FILE_CONTENT = "// This template can be changed via Settings > New File > Change Path.\n\n/// Unit test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\nfn unit_test(){\n\ttodo!()\n}\n\n/// Ignored test description\n///\n/// # Verification(s)\n/// V1 | Description of aspect verified\n#[test]\n#[ignore = \"Must be executed manually\"]\nfn ignored_test(){\n\ttodo!()\n}";
+
 /**
  * Create a new unit tests file filled with default content
  * @param filename Current filename
@@ -45,16 +48,14 @@ export async function create_tests_file(filename : string) : Promise<string | un
             // 2. Create new file with wx that fail is the path exists. Ref : https://www.geeksforgeeks.org/node-js-fs-opensync-method/
             const f = fs.openSync(full_path, 'wx');
 
-            // 3. Write default content
-            let content = vscode.workspace.getConfiguration('rust-tests-bin').get<string>('createdFileContent');
-            if(content != undefined)
-                fs.writeFileSync(f, content);
+            // 3. Write default content in new file
+            fs.writeFileSync(f, get_default_new_file_content());
 
             // 4. Close file created
             fs.closeSync(f);
 
             // 5. Open file created if option is enabled.
-            if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('openAfterCreate'))
+            if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('behavior.openAfterCreate'))
                 open_file_in_vscode(result);
 
         } catch (error) {
@@ -65,6 +66,71 @@ export async function create_tests_file(filename : string) : Promise<string | un
     return result;
 }
 
+/**
+ * Get default new unit tests file content.
+ * @returns Default new unit tests file content.
+ */
+function get_default_new_file_content() : string {
+
+    let content_path = vscode.workspace.getConfiguration('rust-tests-bin').get<string>('newFile.contentPath');
+    if(content_path) {   // If content configuration exists
+        if(fs.existsSync(content_path)){ // If file exists
+            return fs.readFileSync(content_path, {encoding:'utf8', flag:'r'});
+        } else {
+            return DEFAULT_NEW_FILE_CONTENT;    // Return default file content
+        }
+    } else {
+        return DEFAULT_NEW_FILE_CONTENT;    // Return default file content
+    }
+
+}
+
+/**
+ * Show select file dialog
+ * @param show_title Dialog title
+ * @param defaultPathUri Default dialog path
+ * @param file_filters File filters
+ * @param buttonLabel Label on the open button
+ * @ref https://stackoverflow.com/questions/45500570/how-to-open-folder-picker-dialog-in-vscode
+ * @returns Promise with new Uri in string with `file://` removed or undefined if canceled
+ */
+export async function show_select_file_dialog(show_title : string, defaultPathUri : vscode.Uri, file_filters : { [name: string]: string[];} | undefined, buttonLabel : string = "Select") : Promise<String | undefined>{
+
+    // Open dialog options
+    const options: vscode.OpenDialogOptions = {
+        title: show_title,
+        defaultUri: defaultPathUri,
+        canSelectMany: false,
+        openLabel: buttonLabel,
+        filters: file_filters,
+    };
+
+    try {
+        // 1. Open dialog
+        const result = await vscode.window.showOpenDialog(options);
+
+        if(result){
+            // 2. Remove file:// from result
+            let file_path = result?.toString().replace("file://", "");
+
+            // 3. Return modified result
+            return Promise.resolve(file_path);
+        } else {
+            // 2. Return undefined result
+            return Promise.resolve(result);
+        }
+    } catch (error) {
+        return Promise.reject(error);
+    }
+
+    
+}
+
+/**
+ * Delete test file after confirmation
+ * @param filename Filename to delete
+ * @returns True if deleted, false otherwise
+ */
 export async function delete_tests_file(filename : string) : Promise<boolean> {
 
     // Show confirmation for delete
@@ -79,7 +145,7 @@ export async function delete_tests_file(filename : string) : Promise<boolean> {
             fs.rmSync(full_path);
 
             // 3. Delete empty folders if enabled (except base folder)
-            if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('deleteEmptyFolder'))
+            if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('behavior.deleteEmptyFolder'))
                 delete_empty_folders(filename);
 
             // 4. Resolve result
@@ -131,11 +197,11 @@ export async function rename_tests_file(current_filename : string) : Promise<str
                 fs.renameSync(full_path_old, full_path_new);
 
                 // 3. Delete empty folders if enabled (except base folder)
-                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('deleteEmptyFolder'))
+                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('behavior.deleteEmptyFolder'))
                     delete_empty_folders(current_filename);
 
                 // 4. Open new file if option enabled
-                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('openAfterRename'))
+                if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('behavior.openAfterRename'))
                     open_file_in_vscode(result);
 
             } catch (error) {
