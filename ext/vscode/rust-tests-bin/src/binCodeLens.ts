@@ -50,7 +50,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 
 		this.codeLenses = [];	// Reset codeLens array.
 
-		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showCodeLens')) {	// If codeLens are showed
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showCodeLens')) {	// If codeLens are showed
 			const text = document.getText();	// Get text from document.
 			const comments = parser.get_document_comment_ranges(document);	// Get comments ranges to make sure part found aren't commented.
 
@@ -95,7 +95,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 			arguments: [param]
 		}));
 
-		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showRenameFile')){	// Only if enabled
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showRenameFile')){	// Only if enabled
 			// Rename file codelens
 			this.codeLenses.push(new vscode.CodeLens(range, {
 				title: this.get_shortcut_title("replace-all", "Rename file"),
@@ -105,7 +105,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 			}));
 		}
 
-		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('showDeleteFile')){	// Only if enabled
+		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showDeleteFile')){	// Only if enabled
 			// Delete file codelens
 			this.codeLenses.push(new vscode.CodeLens(range, {
 				title: this.get_shortcut_title("trash", "Delete file"),
@@ -158,7 +158,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 */
 	private get_shortcut_title(icon : string, text : string) : string {
 
-		switch(vscode.workspace.getConfiguration('rust-tests-bin').get<string>('shortcutDisplay')){
+		switch(vscode.workspace.getConfiguration('rust-tests-bin').get<string>('display.shortcutDisplay')){
 			case "Icon only":
 				return "$(" + icon + ")";
 			

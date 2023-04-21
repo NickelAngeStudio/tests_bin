@@ -56,6 +56,10 @@ let quickToggleCodeLens =  new StatusBarQuickPickItem("Toggle `$(inspect) codeLe
 	"Hide / Show shortcuts above `unit_tests` macros.", 
 	"rust-tests-bin.toggleCodeLens");
 
+let quickOpenSettings =  new StatusBarQuickPickItem("$(gear) Open settings", 
+	"Open rust-tests-bin extension settings.", 
+	"rust-tests-bin.openSettings");
+
 
 
 
@@ -97,7 +101,7 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 
         // Create quick pick with options
 		const quickPick = vscode.window.createQuickPick();		
-		quickPick.items = [ quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
+		quickPick.items = [ quickOpenSettings, quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
 
         // Register quick pick events
 		quickPick.onDidChangeSelection(selection => {
@@ -116,7 +120,7 @@ export function register_refresh_command(context: vscode.ExtensionContext){
     
     // C3. Toggle `Rename file` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleRename', () => {
-		toggle_boolean_configuration("showRenameFile", "`Rename file` shortcut");         
+		toggle_boolean_configuration("display.showRenameFile", "`Rename file` shortcut");         
     }));
 
     // C4. Open tests_bin base folder.
@@ -131,13 +135,53 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 
 	// C6. Toggle `codeLens` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleCodeLens', () => {
-		toggle_boolean_configuration("showCodeLens", "`codeLens` shortcut");        
+		toggle_boolean_configuration("display.showCodeLens", "`codeLens` shortcut");        
     }));
 
 	// C7. Toggle `Delete file` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleDelete', () => {
-		toggle_boolean_configuration("showDeleteFile", "`Delete file` shortcut");         
+		toggle_boolean_configuration("display.showDeleteFile", "`Delete file` shortcut");         
     }));
+
+	// C8. Select default content file path.
+    context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.selectContentPath', () => {
+
+		let result = fs.show_select_file_dialog("Select Rust file to copy content from", get_default_path_uri(), {'Rust files': ['rs']});
+
+		result.then( (fileUri) => {
+			if(fileUri){		// Update configuration value.
+				vscode.workspace.getConfiguration('rust-tests-bin').update("newFile.contentPath", fileUri);
+
+				// Show changed setting (Will make Modified in workspace appear)
+				vscode.commands.executeCommand('workbench.action.openSettings');
+
+				// Show confirmatin message
+				vscode.window.showInformationMessage('Workspace setting for `Content Path` updated!');
+
+			}
+		}).catch ( (error) => {
+			// Show error message
+			vscode.window.showErrorMessage(error.toString());
+		});
+		
+    }));
+
+	// C9. Open rust-tests-bin extension settings.
+    context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.openSettings', () => {
+		vscode.commands.executeCommand('workbench.action.openSettings', "rust-tests-bin");         
+    }));
+}
+
+/**
+ * Get the default new file content path as Uri.
+ */
+function get_default_path_uri() : vscode.Uri {
+	let path = vscode.workspace.getConfiguration('rust-tests-bin').get<string>('newFile.contentPath');
+	if(path){
+		return vscode.Uri.parse(path);
+	} else {
+		return vscode.Uri.parse("");
+	}
 }
 
 /**
@@ -174,6 +218,7 @@ export function register_code_lens() {
 	vscode.commands.registerCommand("rust-tests-bin.open", (args: [string, vscode.Range | vscode.Position]) => {
 		fs.open_file_in_vscode(args[0]);
 	});
+	
 
 	// Command to rename the unit test file
 	vscode.commands.registerCommand("rust-tests-bin.rename", (args: [string, vscode.Range | vscode.Position]) => {
