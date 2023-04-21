@@ -17,7 +17,7 @@ TODO CMD HERE
 ## Usage
 
 ```rust
-use tests_bin::{ unit__tests, unit_tests ];
+use tests_bin::{ unit__tests, unit_tests };
 
 // Will link a module to `tests/unit/global_tests.rs` with a module named `global_test_rs`.
 unit__tests!("global_tests.rs");

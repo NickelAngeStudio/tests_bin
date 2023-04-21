@@ -1,13 +1,24 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png")]
-//! This [crate](https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html) is aimed toward [Rustacean](https://rustaceans.org/) who wish to have a bin folder where they can easily
-//! organize all their unit tests to clean their `src` folder. 
+//! This [crate](https://doc.rust-lang.org/book/ch07-01-packages-and-crates.html) is aimed toward [Rustacean](https://rustaceans.org/) 
+//! who wish to have a bin folder where they can easily organize all their unit tests to clean their src folder. VSCode extension included! [Visit Wiki for more informations.](https://github.com/NickelAngeStudio/tests_bin/wiki)
 //! 
-//! *Include a VSCode extension for quick shortcuts like create tests file, rename file and more. [See here!](https://github.com/NickelAngeStudio/tests_bin/wiki/Extension)*
+//! # Usage
 //! 
-//! <img src="https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin_ext.png" width="600" height="160"><br>
-//! 
-//! [Get more details on the wiki here!](https://github.com/NickelAngeStudio/tests_bin/wiki)
+//! ```
+//! use tests_bin::{ unit__tests, unit_tests };
+//!
+//! // Will link a module to `tests/unit/global_tests.rs` 
+//! // with a module named `global_test_rs`.
+//! unit__tests!("global_tests.rs");
+//!  
+//! // Will link a module to `tests/unit/add.rs` 
+//! // with a module named `pub_fn_add_usize`.
+//! #[unit_tests("add.rs")]
+//! pub fn add(left: usize, right: usize) -> usize {
+//!     left + right
+//! }
+//! ```
 
 use proc_macro::TokenStream;
 use crate::config::extract_unit_tests_parameters;
