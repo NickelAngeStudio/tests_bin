@@ -114,6 +114,28 @@ pub fn append_file(file_path : String, data : String) -> Result<bool, Error> {
 
 }
 
+/**
+ * Copy test file to destination, run cargo run and compare result to expected.
+ */
+pub fn run_test(working_path : &String, project_path : &String, test_file : &str, success : bool, expected : &str){
+
+    // 1. Clean test project
+    assert_cmd!(project_path, "cargo", ["clean" ], true, "");
+
+    // 2. Copy test over main.rs
+    let from = format!("{}/tests/{}", working_path, test_file);
+    let to = format!("{}/src/main.rs", project_path);
+    match fs::copy(from, to){
+        Ok(_) => {},
+        Err(err) => panic!("{:?}", err),    // Panic if we can't copy test file
+    }
+
+    // 3. Run test project
+    assert_cmd!(project_path, "cargo", ["run" ], success, expected);
+
+    
+}
+
 /// Run shell command and return if success and output message as string
 pub fn run_command(working_dir : &String, command : &str, args : Vec<&str>) -> (bool, String) {
 
