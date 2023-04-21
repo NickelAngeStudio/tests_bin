@@ -1,3 +1,7 @@
+[![ubuntu-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-latest.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-latest.yml)
+[![windows-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-latest.yml/badge.svg?branch=main)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-latest.yml)
+[![macos-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-latest.yml/badge.svg?branch=main)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-latest.yml)
+
 # tests_bin
 
 This crate is aimed toward Rustacean who wish to have a bin folder where they can easily organize all their unit tests to clean their src folder. VSCode extension included! [Visit Wiki for more informations.](https://github.com/NickelAngeStudio/tests_bin/wiki)
