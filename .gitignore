@@ -1,8 +1,10 @@
 /target
 /Cargo.lock
 /tests_bin_test
-/tests/tests.rs
 /tests/unit
 /.vscode
 /ext/vscode/rust-tests-bin/node_modules
 /ext/vscode/rust-tests-bin/out
+/_tb_integration
+/_tb_performance
+/_tb_stress
