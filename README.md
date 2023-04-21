@@ -1,6 +1,6 @@
 # tests_bin
 
-This crate is aimed toward Rustacean who wish to have a bin folder where they can easily unload all their unit tests to clean their src folder. VSCode extension included! [Visit Wiki for more informations.](https://github.com/NickelAngeStudio/tests_bin/wiki)
+This crate is aimed toward Rustacean who wish to have a bin folder where they can easily organize all their unit tests to clean their src folder. VSCode extension included! [Visit Wiki for more informations.](https://github.com/NickelAngeStudio/tests_bin/wiki)
 <br>
 ## Installation
 ```bash
