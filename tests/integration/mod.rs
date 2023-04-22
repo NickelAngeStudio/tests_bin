@@ -6,9 +6,6 @@ use crate::{ init_integration_test, clean_integration_test, run_test, copy_dir_a
 /// Integration tests project name
 const PRJ_NAME : &str = "_tb_integration";
 
-
-
-
 /// tests_bin integration tests.
 /// 
 /// # Verification(s)
