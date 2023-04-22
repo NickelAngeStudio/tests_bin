@@ -34,7 +34,20 @@ pub fn init_integration_test(test_name : &str) -> (String, String) {
 
     // 1. Create working path and project path
     let working_path = match std::env::var(CARGO_MANIFEST_DIR) {
-        Ok(cargo_dir) => cargo_dir,
+        Ok(cargo_dir) => {
+            // Windows only instruction
+            #[cfg(windows)]
+            {
+                cargo_dir.replace("\\", "\\\\");
+            }
+
+            // All other Os
+            #[cfg(not(windows))]
+            {
+                cargo_dir
+            }
+            
+        },
         Err(err) => panic!("{:?}", err),    // Panic if we can't fetch directory.
     };
     let project_path = format!("{}/{}", working_path, test_name);
