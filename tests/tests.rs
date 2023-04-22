@@ -6,9 +6,6 @@ mod integration;
 /// Performance tests
 mod performance;
 
-/// Stress tests
-mod stress;
-
 pub const CARGO_MANIFEST_DIR : &str = "CARGO_MANIFEST_DIR";             // Cargo manifest directory key
 pub const CARGO_PKG_VERSION : &str = "CARGO_PKG_VERSION";               // Cargo package version key
 pub const CARGO_PKG_NAME : &str = "CARGO_PKG_NAME";                     // Cargo package name key

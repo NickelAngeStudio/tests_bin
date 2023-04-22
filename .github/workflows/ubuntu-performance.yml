@@ -1,0 +1,16 @@
+name: ubuntu-performance
+
+on: workflow_dispatch
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:      
+  performance:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run performance tests
+      run: cargo test performance_tests --verbose -- --nocapture --ignored
