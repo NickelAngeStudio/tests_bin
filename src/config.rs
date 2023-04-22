@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use proc_macro::TokenStream;
 
 use crate::errors::TestsBinErrors;
@@ -48,7 +50,21 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
 
                 if full_path == Option::None {  // If full_path has no value, it is the full path.
                     match std::env::var(CARGO_MANIFEST_DIR){
-                        Ok(value) => full_path = Some(format!("{}/{}/{}", value, get_tests_bin_base_folder(), parameter)),
+                        Ok(value) => {
+                            let file_path = format!("{}/{}", get_tests_bin_base_folder(), parameter);
+                            let cargo_path = Path::new(&value);
+                            let file_path = Path::new(&file_path);
+
+                            // Format path to OS String.
+                            match cargo_path.as_os_str().to_str() {
+                                Some(cargo_os_path) =>  match file_path.as_os_str().to_str() {
+                                    Some(file_os_path) => full_path = Some(format!("{}/{}", cargo_os_path, file_os_path)),
+                                    None => panic!("Cannot format path to OSString!"),
+                                },
+                                
+                                None => panic!("Cannot format path to OSString!"),
+                            }
+                        },
                         Err(_) => panic!("Env variable `{}` not set!", CARGO_MANIFEST_DIR),
                     }
                 } else {    // Else it is the module name parameter.
