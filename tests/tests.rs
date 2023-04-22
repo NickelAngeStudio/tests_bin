@@ -38,7 +38,7 @@ pub fn init_integration_test(test_name : &str) -> (String, String) {
             // Windows only instruction
             #[cfg(windows)]
             {
-                cargo_dir.replace("\\", "\\\\");
+                cargo_dir.replace("\\", "\\\\")
             }
 
             // All other Os
