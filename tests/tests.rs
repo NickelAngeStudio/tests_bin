@@ -24,7 +24,7 @@ macro_rules! assert_cmd {
                 panic!("Expected output to contain `{}` but got {}!", $expected, result.1);
             }
         } else {
-            panic!("Expected Success(`{}`) for `{} {:?}` but got `{}` instead!", $success, $cmd, $args, result.0);
+            panic!("Expected Success(`{}`) for `{} {:?}` but got `{}` instead!\n{}", $success, $cmd, $args, result.0, result.1);
         }
     }
 }
@@ -115,7 +115,7 @@ pub fn append_file(file_path : String, data : String) -> Result<bool, Error> {
 }
 
 /**
- * Copy test file to destination, run cargo run and compare result to expected.
+ * Clean project, copy test file to destination, run cargo test and compare result to expected.
  */
 pub fn run_test(working_path : &String, project_path : &String, test_file : &str, success : bool, expected : &str){
 
@@ -123,17 +123,20 @@ pub fn run_test(working_path : &String, project_path : &String, test_file : &str
     assert_cmd!(project_path, "cargo", ["clean" ], true, "");
 
     // 2. Copy test over main.rs
-    let from = format!("{}/tests/{}", working_path, test_file);
-    let to = format!("{}/src/main.rs", project_path);
-    match fs::copy(from, to){
+    copy_file(format!("{}/tests/{}", working_path, test_file), format!("{}/src/main.rs", project_path));
+
+    // 3. Run test project
+    assert_cmd!(project_path, "cargo", ["test" ], success, expected);   
+}
+
+/**
+ * Copy file from source to destination and panic! if error.
+ */
+pub fn copy_file(src : String, dst : String){
+    match fs::copy(src, dst){
         Ok(_) => {},
         Err(err) => panic!("{:?}", err),    // Panic if we can't copy test file
     }
-
-    // 3. Run test project
-    assert_cmd!(project_path, "cargo", ["run" ], success, expected);
-
-    
 }
 
 /// Run shell command and return if success and output message as string
@@ -185,7 +188,7 @@ pub fn clean_integration_test(working_path : String, project_path : String) {
  * Copy directory with files from source to destination
  * Ref : https://stackoverflow.com/questions/26958489/how-to-copy-a-folder-recursively-in-rust
  */
-fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
+pub fn copy_dir_all(src: impl AsRef<Path>, dst: impl AsRef<Path>) -> io::Result<()> {
     fs::create_dir_all(&dst)?;
     for entry in fs::read_dir(src)? {
         let entry = entry?;
