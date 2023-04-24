@@ -178,19 +178,24 @@ pub fn run_command(working_dir : &String, command : &str, args : Vec<&str>) -> (
 /// Clean integration project and folder
 pub fn clean_integration_test(working_path : String, project_path : String) {  
 
-    // 1. Delete project folder
-    match std::fs::remove_dir_all(project_path){
-        Ok(_) => {},
-        Err(err) => panic!("{:?}", err),    // Panic if we can't delete test project directory.
-    }
+    // Set working directory first
+    match std::env::set_current_dir(Path::new(working_path.as_str())){
+        Ok(_) => {
+            // 1. Delete project folder
+            match std::fs::remove_dir_all(project_path){
+                Ok(_) => {},
+                Err(err) => panic!("{:?}", err),    // Panic if we can't delete test project directory.
+            }
 
-    // 2. Delete package directory
-    let package_path = format!("{}/target/package", working_path);
-    match std::fs::remove_dir_all(package_path){
-        Ok(_) => {},
-        Err(err) => panic!("{:?}", err),    // Panic if we can't delete package directory.
+            // 2. Delete package directory
+            let package_path = format!("{}/target/package", working_path);
+            match std::fs::remove_dir_all(package_path){
+                Ok(_) => {},
+                Err(err) => panic!("{:?}", err),    // Panic if we can't delete package directory.
+            }
+        },
+        Err(err) => panic!("{:?}", err),    // Panic if we can't set working directory
     }
-
 
 }
 
