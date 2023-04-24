@@ -42,7 +42,17 @@ fn integration_tests() {
     run_test(&working_path, &project_path, "integration/004.rs", false, "Incorrect parameters!");
 
     // V5 | File not found.
-    run_test(&working_path, &project_path, "integration/005.rs", false, "No such file or directory");
+    // Windows only instruction
+    #[cfg(windows)]
+    {
+        run_test(&working_path, &project_path, "integration/005.rs", false, "os error 3");
+    }
+
+    // All other Os
+    #[cfg(not(windows))]
+    {
+        run_test(&working_path, &project_path, "integration/005.rs", false, "os error 2");
+    }
     
     // V6 | Copy unit tests files to tests/unit
     let tests_path = format!("{}/tests/integration/unit", working_path);

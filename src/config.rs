@@ -48,7 +48,19 @@ pub(crate) fn extract_unit_tests_parameters(attr: TokenStream, item: TokenStream
 
                 if full_path == Option::None {  // If full_path has no value, it is the full path.
                     match std::env::var(CARGO_MANIFEST_DIR){
-                        Ok(value) => full_path = Some(format!("{}/{}/{}", value, get_tests_bin_base_folder(), parameter)),
+                        Ok(value) => {
+                            // Windows only instruction
+                            #[cfg(windows)]
+                            {
+                                full_path = Some(format!("{}/{}/{}", value, get_tests_bin_base_folder(), parameter).replace("\\", "\\\\"));
+                            }
+
+                            // All other Os
+                            #[cfg(not(windows))]
+                            {
+                                full_path = Some(format!("{}/{}/{}", value, get_tests_bin_base_folder(), parameter));
+                            }
+                        },
                         Err(_) => panic!("Env variable `{}` not set!", CARGO_MANIFEST_DIR),
                     }
                 } else {    // Else it is the module name parameter.

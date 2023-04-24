@@ -1,6 +1,9 @@
 [![ubuntu-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-latest.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-latest.yml)
 [![windows-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-latest.yml/badge.svg?branch=main)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-latest.yml)
 [![macos-latest](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-latest.yml/badge.svg?branch=main)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-latest.yml)
+[![ubuntu-performance](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-performance.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/ubuntu-performance.yml)
+[![windows-performance](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-performance.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-performance.yml)
+[![macos-performance](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-performance.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-performance.yml)
 
 # tests_bin
 
