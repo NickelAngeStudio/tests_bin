@@ -5,10 +5,32 @@
 [![windows-performance](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-performance.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/windows-performance.yml)
 [![macos-performance](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-performance.yml/badge.svg)](https://github.com/NickelAngeStudio/tests_bin/actions/workflows/macos-performance.yml)
 
+<img src="https://github.com/NickelAngeStudio/tests_bin/blob/main/tests_bin.png?raw=true" width="64" height="64" align="left"/>
+
 # tests_bin
 
 This crate is aimed toward Rustacean who wish to have a bin folder where they can easily organize all their unit tests to clean their src folder. VSCode extension included! [Visit Wiki for more informations.](https://github.com/NickelAngeStudio/tests_bin/wiki)
-<br>
+
+<img src="https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin_ext.png"/>
+
+## Features
+### *Crate*
+- Organize your unit tests with one relative path.
+- Automatically create your unit tests module name.
+- Add attribute macro directly above your item for easier unit tests tracking.
+- Work with rust-analyzer to run your tests.
+- Unit tests folder path is customizable.
+
+
+### *VSCode Extension*
+- Shortcut to create new unit tests file in bin folder.
+- Open your unit tests files directly from your code.
+- Shortcuts to rename and delete unit tests file.
+- Customizable new unit tests file template.
+- Lots of settings to fit your taste.
+
+[More features details in wiki.](https://github.com/NickelAngeStudio/tests_bin/wiki/Features)
+
 ## Installation
 ```bash
 cargo add tests_bin
