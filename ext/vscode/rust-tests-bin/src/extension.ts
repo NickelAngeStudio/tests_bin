@@ -20,23 +20,23 @@ import * as activation from './activation';
 export function activate(context: vscode.ExtensionContext) {
 	
 	// 1. Verify if dependency "test_bins" is in Cargo.toml
-	if(fs.is_crate_added()) {
+	if(fs.isCrateAdded()) {
 		// 1.1. Refresh tests_bin folder path.
-		fs.refresh_tests_bin_folder();
+		fs.refreshTestsBinFolder();
 
 		// 1.2. Register code lens
-		activation.register_code_lens();
+		activation.registerCodeLens();
 	} else {
 		// If not found, show warning in log.
 		console.warn("rust-tests-bin : Crate `tests_bin` not found in `Cargo.toml` [dependencies]!\nYou can add it with `cargo add tests_bin` command in your terminal.");
 	}
 
 	// 2. Create command to refresh extension bin folder path
-	activation.register_refresh_command(context);
+	activation.registerExtensionCommand(context);
 
 	// 3. Create status bar element if enabled
 	if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showInStatusBar'))
-		activation.create_status_bar(context);
+		{activation.createStatusBar(context);}
 
 }
 
