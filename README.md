@@ -40,7 +40,7 @@ cargo add tests_bin
 
 Launch VS Code Quick Open (Ctrl+P), paste the following command, and press enter.
 ```
-ext install TODO
+ext install NickelAngeStudio.rust-tests-bin
 ```
 
 ## Usage
