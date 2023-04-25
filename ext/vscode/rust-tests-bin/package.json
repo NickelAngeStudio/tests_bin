@@ -10,14 +10,14 @@
   },
   "license": "MIT",
   "engines": {
-    "vscode": "^1.56.0"
+    "vscode": "^1.60.0"
   },
   "categories": [ "Programming Languages", "Testing", "Other" ],
   "keywords": [ "tests_bin", "rust", "test", "folder", "bin" ],
   "sponsor": {
     "url": "https://github.com/sponsors/NickelAngeStudio"
   },
-  "icon": "https://raw.githubusercontent.com/NickelAngeStudio/tests_bin/main/tests_bin.png",
+  "icon": "tests_bin.png",
   "galleryBanner": {
     "color": "#E65C00",
     "theme": "light"
