@@ -30,6 +30,10 @@ This extension contributes the following settings:
 - `rust-tests-bin.display.showCodeLens` : Show/Hide all shortcuts above `tests_bin` macros.
 - `rust-tests-bin.newFile.contentPath` : Path to the file whose content are copied in new unit tests file.
 
+## Known Issues
+
+- `Open tests_bin base folder in explorer` : Option is removed from Windows since command `revealFileInOS` act differently on Windows.  
+
 ## Release Notes
 
 ### 1.0.0

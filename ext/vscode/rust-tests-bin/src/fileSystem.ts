@@ -110,11 +110,8 @@ export async function showSelectFileDialog(showTitle : string, defaultPathUri : 
         const result = await vscode.window.showOpenDialog(options);
 
         if(result){
-            // 2. Remove file:// from result
-            let filePath = result?.toString().replace("file://", "");
-
-            // 3. Return modified result
-            return Promise.resolve(filePath);
+            // 2. Return filesystem path
+            return Promise.resolve(result[0].fsPath);
         } else {
             // 2. Return undefined result
             return Promise.resolve(result);

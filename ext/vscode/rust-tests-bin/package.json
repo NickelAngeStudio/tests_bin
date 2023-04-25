@@ -129,12 +129,6 @@
         "command": "rust-tests-bin.openSettings",
         "category": "Settings"
       }
-
-      
-
-      
-
-      
     ]
   },
   "scripts": {
@@ -142,15 +136,14 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "lint": "eslint src --ext ts"
   },
-  "devDependencies": {
+    "devDependencies": {
     "@types/vscode": "^1.60.0",
     "@types/node": "16.x",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
-    "typescript": "^3.3.0"
+    "typescript": "^4.0.0"
   }
 }

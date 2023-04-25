@@ -100,9 +100,18 @@ export function registerExtensionCommand(context: vscode.ExtensionContext){
 	context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.statusBarMenu', () => {
 
         // Create quick pick with options
-		const quickPick = vscode.window.createQuickPick();		
-		quickPick.items = [ quickOpenSettings, quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
+		const quickPick = vscode.window.createQuickPick();	
+		
+		switch(process.platform){	// Some options are different according to platform.
+			case 'win32':
+				// Windows platform `quickOpenFolder` doesn't work correctly.
+				quickPick.items = [ quickOpenSettings, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
+    		break;
 
+  			default:
+				quickPick.items = [ quickOpenSettings, quickOpenFolder, quickRefresh , quickReload, quickToggleRename, quickToggleDelete, quickToggleCodeLens ];
+		}
+		
         // Register quick pick events
 		quickPick.onDidChangeSelection(selection => {
 			if (selection[0]) {

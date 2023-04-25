@@ -38,9 +38,9 @@ cargo add tests_bin
 
 ## VSCode extension installation
 
-Ctrl-Shift-P and enter
+Launch VS Code Quick Open (Ctrl+P), paste the following command, and press enter.
 ```
-TODO CMD HERE
+ext install TODO
 ```
 
 ## Usage
