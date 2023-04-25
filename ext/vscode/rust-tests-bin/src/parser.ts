@@ -22,10 +22,10 @@ const parameterRegex = /\"(.*?)\"/gm;
  * @param document Document to get comments range from
  * @returns Array of comments range.
  */
-export function get_document_comment_ranges(document: vscode.TextDocument) : Array<[start : number, end: number]> {
+export function getDocumentCommentRanges(document: vscode.TextDocument) : Array<[number, number]> {
 
     let text = document.getText();
-    let ranges:Array<[start : number, end: number]> = [];
+    let ranges:Array<[number, number]> = [];
 
     // Reset regex
     commentRegex.lastIndex = 0;
@@ -51,9 +51,9 @@ export function get_document_comment_ranges(document: vscode.TextDocument) : Arr
  * @param matches   Text match from macroRegex
  * @returns Range of code
  */
-export function get_match_range(document: vscode.TextDocument, matches : any) : vscode.Range {
+export function getMatchRange(document: vscode.TextDocument, matches : any) : vscode.Range {
 
-    return get_range_from_start_end(document, matches.index, matches.index + matches[0].length);
+    return getRangeFromStartEnd(document, matches.index, matches.index + matches[0].length);
 
 }
 
@@ -65,24 +65,24 @@ export function get_match_range(document: vscode.TextDocument, matches : any) : 
  * @param end End position to get range
  * @returns Range created
  */
-function get_range_from_start_end(document: vscode.TextDocument, start : number, end : number) : vscode.Range {	
+function getRangeFromStartEnd(document: vscode.TextDocument, start : number, end : number) : vscode.Range {	
 
-    const line_start = document.lineAt(document.positionAt(start).line);
-    const pos_start = new vscode.Position(line_start.lineNumber, start);
+    const lineStart = document.lineAt(document.positionAt(start).line);
+    const posStart = new vscode.Position(lineStart.lineNumber, start);
 
-    const line_end = document.lineAt(document.positionAt(end).line);
+    const lineEnd = document.lineAt(document.positionAt(end).line);
     // Get end character position of last line
-    let char_end_index = line_end.text.indexOf("}");	// Look for macro with {} end
-    if(char_end_index < 0)
-        char_end_index = line_end.text.indexOf("]");	// Look for attribute end character
-    if(char_end_index < 0)
-        char_end_index = line_end.text.indexOf(";");
-    if(char_end_index < 0)		// If no end character, use `end`
-        char_end_index = end;
+    let charEndIndex = lineEnd.text.indexOf("}");	// Look for macro with {} end
+    if(charEndIndex < 0)
+        {charEndIndex = lineEnd.text.indexOf("]");}	// Look for attribute end character
+    if(charEndIndex < 0)
+        {charEndIndex = lineEnd.text.indexOf(";");}
+    if(charEndIndex < 0)		// If no end character, use `end`
+        {charEndIndex = end;}
 
-    const pos_end = new vscode.Position(line_end.lineNumber, char_end_index);
+    const posEnd = new vscode.Position(lineEnd.lineNumber, charEndIndex);
 
-    return new vscode.Range(pos_start, pos_end);
+    return new vscode.Range(posStart, posEnd);
 }
 
 
@@ -92,7 +92,7 @@ function get_range_from_start_end(document: vscode.TextDocument, start : number,
  * @param match Match of regex
  * @returns Tuple of filename with it's range or position where to insert text.
  */
-export function get_filename_range_position(document: vscode.TextDocument, match : any) : [string, vscode.Range | vscode.Position]  {
+export function getFilenameRangePosition(document: vscode.TextDocument, match : any) : [string, vscode.Range | vscode.Position]  {
     // Reset regex
     parameterRegex.lastIndex = 0;
 
@@ -100,9 +100,9 @@ export function get_filename_range_position(document: vscode.TextDocument, match
     let param = parameterRegex.exec(match[0].toString());
 
     if(param !== null) { // If filename was found, return filename and it's ranfe
-        return [param[0].toString().replace(/"/g, "").trim(), get_range_of_parameter(document, match, param)];
+        return [param[0].toString().replace(/"/g, "").trim(), getRangeOfParameter(document, match, param)];
     } else { // If no filename found, return position to insert new filename
-        return ["", get_position_of_parameter(document, match)];
+        return ["", getPositionOfParameter(document, match)];
     }
 }
 
@@ -113,7 +113,7 @@ export function get_filename_range_position(document: vscode.TextDocument, match
  * @param param Parameter match
  * @returns Range of parameter including ""
  */
-function get_range_of_parameter(document: vscode.TextDocument, match : any, param : any) : vscode.Range {
+function getRangeOfParameter(document: vscode.TextDocument, match : any, param : any) : vscode.Range {
     // Get line of document of parameter
     const line = document.lineAt(document.positionAt(match.index + param.index).line);
 
@@ -122,11 +122,11 @@ function get_range_of_parameter(document: vscode.TextDocument, match : any, para
     const indexOfSecond = line.text.indexOf("\"", indexOfFirst +1);
 
     // Create start and end position from indexes
-    const pos_start = new vscode.Position(line.lineNumber, indexOfFirst);
-    const pos_end = new vscode.Position(line.lineNumber, indexOfSecond + 1);
+    const posStart = new vscode.Position(line.lineNumber, indexOfFirst);
+    const posEnd = new vscode.Position(line.lineNumber, indexOfSecond + 1);
 
     // Return new range
-    return new vscode.Range(pos_start, pos_end);
+    return new vscode.Range(posStart, posEnd);
 }
 
 /**
@@ -135,7 +135,7 @@ function get_range_of_parameter(document: vscode.TextDocument, match : any, para
  * @param match Macro match
  * @returns Position where to insert new filename
  */
-function get_position_of_parameter(document: vscode.TextDocument, match : any) : vscode.Position {
+function getPositionOfParameter(document: vscode.TextDocument, match : any) : vscode.Position {
 
     // Get global position of first `(`
     let index = match[0].toString().indexOf("(");

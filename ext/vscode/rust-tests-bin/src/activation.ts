@@ -69,7 +69,7 @@ let quickOpenSettings =  new StatusBarQuickPickItem("$(gear) Open settings",
  * Create `tests_bin` status bar.
  * @param context Context of extension.
  */
-export function create_status_bar(context: vscode.ExtensionContext) {
+export function createStatusBar(context: vscode.ExtensionContext) {
 
 	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 500);
 	statusBar.text = `$(folder) tests_bin`;
@@ -82,14 +82,14 @@ export function create_status_bar(context: vscode.ExtensionContext) {
 }
 
 /**
- * Register the refresh command used to refresh paths.
+ * Register the extension commands.
  * @param context Context of extension
  */
-export function register_refresh_command(context: vscode.ExtensionContext){
+export function registerExtensionCommand(context: vscode.ExtensionContext){
 	// C1. Refresh tests_bin folder command
 	context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.refresh', () => {
 		// Refresh tests_bin folder
-		fs.refresh_tests_bin_folder();
+		fs.refreshTestsBinFolder();
 		
 		// Message that refresh is completed.
 		vscode.window.showInformationMessage('`rust-tests-bin` path refreshed!');
@@ -120,12 +120,12 @@ export function register_refresh_command(context: vscode.ExtensionContext){
     
     // C3. Toggle `Rename file` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleRename', () => {
-		toggle_boolean_configuration("display.showRenameFile", "`Rename file` shortcut");         
+		toggleBooleanConfiguration("display.showRenameFile", "`Rename file` shortcut");         
     }));
 
     // C4. Open tests_bin base folder.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.openFolder', () => {
-        fs.open_tests_bin_folder();
+        fs.openTestsBinFolder();
     }));
 
     // C5. Reload `rust-tests-bin` extension
@@ -135,18 +135,18 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 
 	// C6. Toggle `codeLens` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleCodeLens', () => {
-		toggle_boolean_configuration("display.showCodeLens", "`codeLens` shortcut");        
+		toggleBooleanConfiguration("display.showCodeLens", "`codeLens` shortcut");        
     }));
 
 	// C7. Toggle `Delete file` shortcut.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.toggleDelete', () => {
-		toggle_boolean_configuration("display.showDeleteFile", "`Delete file` shortcut");         
+		toggleBooleanConfiguration("display.showDeleteFile", "`Delete file` shortcut");         
     }));
 
 	// C8. Select default content file path.
     context.subscriptions.push(vscode.commands.registerCommand('rust-tests-bin.selectContentPath', () => {
 
-		let result = fs.show_select_file_dialog("Select Rust file to copy content from", get_default_path_uri(), {'Rust files': ['rs']});
+		let result = fs.showSelectFileDialog("Select Rust file to copy content from", getDefaultPathUri(), {'rustFiles': ['rs']});
 
 		result.then( (fileUri) => {
 			if(fileUri){		// Update configuration value.
@@ -175,7 +175,7 @@ export function register_refresh_command(context: vscode.ExtensionContext){
 /**
  * Get the default new file content path as Uri.
  */
-function get_default_path_uri() : vscode.Uri {
+function getDefaultPathUri() : vscode.Uri {
 	let path = vscode.workspace.getConfiguration('rust-tests-bin').get<string>('newFile.contentPath');
 	if(path){
 		return vscode.Uri.parse(path);
@@ -189,15 +189,15 @@ function get_default_path_uri() : vscode.Uri {
  * @param property Name of the configuration
  * @param label Label used to confirm new state
  */
-function toggle_boolean_configuration(property : string, label : string) {
+function toggleBooleanConfiguration(property : string, label : string) {
 
-	let current_value = vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>(property);
+	let currentValue = vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>(property);
 
 	// Update configuration
-	vscode.workspace.getConfiguration('rust-tests-bin').update(property, !current_value);
+	vscode.workspace.getConfiguration('rust-tests-bin').update(property, !currentValue);
 
 	// Show toggle value in message
-	if(!current_value){
+	if(!currentValue){
 		vscode.window.showInformationMessage(label + '` activated.');
 	} else {
 		vscode.window.showInformationMessage(label + '` disabled.');
@@ -208,7 +208,7 @@ function toggle_boolean_configuration(property : string, label : string) {
 /**
  * Register the `tests_bin` code lens that provide shortcut for macros.
  */
-export function register_code_lens() {
+export function registerCodeLens() {
 	const binCodeLensProvider = new TestsBinCodeLensProvider();
 
 	// Register code lens provider only for rust files
@@ -216,17 +216,17 @@ export function register_code_lens() {
 
 	// Command to open the unit test file
 	vscode.commands.registerCommand("rust-tests-bin.open", (args: [string, vscode.Range | vscode.Position]) => {
-		fs.open_file_in_vscode(args[0]);
+		fs.openFileInCscode(args[0]);
 	});
 	
 
 	// Command to rename the unit test file
 	vscode.commands.registerCommand("rust-tests-bin.rename", (args: [string, vscode.Range | vscode.Position]) => {
-		let result = fs.rename_tests_file(args[0]);
+		let result = fs.renameTestsFile(args[0]);
 
 		result.then( (filename) => {
 			// If input wan't canceled.
-			if(filename != undefined) {
+			if(filename !== undefined) {
 				// Write macro parameters with filename
 				const textEditor = vscode.window.activeTextEditor;
 
@@ -245,10 +245,10 @@ export function register_code_lens() {
 	// Command to rename the delete test file
 	vscode.commands.registerCommand("rust-tests-bin.delete", (args: [string, vscode.Range | vscode.Position]) => {
 
-		let result = fs.delete_tests_file(args[0]);
+		let result = fs.deleteTestsFile(args[0]);
 
-		result.then( (is_deleted) => {
-			if(is_deleted){		// Show deletion confirmation.
+		result.then( (isDeleted) => {
+			if(isDeleted){		// Show deletion confirmation.
 				vscode.window.showInformationMessage('`' + args[0] + '` deleted.');
 			}
 		}).catch ( (error) => {
@@ -261,20 +261,20 @@ export function register_code_lens() {
 	// Command to create the unit test file
 	vscode.commands.registerCommand("rust-tests-bin.create", async (args: [string, vscode.Range | vscode.Position]) => {
 		
-		let result = fs.create_tests_file(args[0]);
+		let result = fs.createTestsFile(args[0]);
 
 		result.then( (filename) => {
 			// If input wan't canceled.
-			if(filename != undefined) {
+			if(filename !== undefined) {
 				// Write macro parameters with filename
 				const textEditor = vscode.window.activeTextEditor;
 
 				if(textEditor){
 					textEditor.edit( builder => {
 						if(typeof args[1] === typeof vscode.Position)	// We insert since no "" defined.
-							builder.insert(<vscode.Position>args[1], "\"" + filename + "\"")
+							{builder.insert(<vscode.Position>args[1], "\"" + filename + "\"");}
 						else	// Replace content in ""
-							builder.replace(<vscode.Range>args[1], "\"" + filename + "\"");
+							{builder.replace(<vscode.Range>args[1], "\"" + filename + "\"");}
 					});
 				}
 			}

@@ -12,7 +12,7 @@
  */
 
 import * as vscode from 'vscode';
-import { is_file_in_bin } from './fileSystem';
+import { isFileInBin } from './fileSystem';
 import * as parser from './parser';
 
 /**
@@ -52,7 +52,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 
 		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showCodeLens')) {	// If codeLens are showed
 			const text = document.getText();	// Get text from document.
-			const comments = parser.get_document_comment_ranges(document);	// Get comments ranges to make sure part found aren't commented.
+			const comments = parser.getDocumentCommentRanges(document);	// Get comments ranges to make sure part found aren't commented.
 
 			// Reset regex
 			this.macroRegex.lastIndex = 0;
@@ -60,17 +60,17 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 			let matches;
 			while ((matches = this.macroRegex.exec(text)) !== null) {
 
-				if(!this.is_commented(matches.index, comments)){	// Make sure match isn't commented
-					let param = parser.get_filename_range_position(document, matches);	// Get macro parameters
-					let range = parser.get_match_range(document, matches);	// Get macro range for codelens
+				if(!this.isCommented(matches.index, comments)){	// Make sure match isn't commented
+					let param = parser.getFilenameRangePosition(document, matches);	// Get macro parameters
+					let range = parser.getMatchRange(document, matches);	// Get macro range for codelens
 
 					if(typeof param[1] === typeof vscode.Position) {	// Show create file since filename parameter not found
-						this.create_codelens_to_create_file(range, param);
+						this.createCodelensToCreateFile(range, param);
 					} else {
-						if(is_file_in_bin(param[0])) 
-							this.create_codelens_for_existing_file(range, param);	// File exists, create Open file and Rename File codelens
+						if(isFileInBin(param[0])) 
+							{this.createCodelensForExistingFile(range, param);}	// File exists, create Open file and Rename File codelens
 						else 
-							this.create_codelens_to_create_file(range, param);		// File doesn't exists, create Create file codelens
+							{this.createCodelensToCreateFile(range, param);}		// File doesn't exists, create Create file codelens
 					}
 				}		
 			}
@@ -85,11 +85,11 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 * @param range Range that codeLens apply to
 	 * @param param Macro parameters.
 	 */
-	private create_codelens_for_existing_file(range: vscode.Range, param: [string, vscode.Range | vscode.Position]) {
+	private createCodelensForExistingFile(range: vscode.Range, param: [string, vscode.Range | vscode.Position]) {
 
 		// Open file codelens
 		this.codeLenses.push(new vscode.CodeLens(range, {
-			title: this.get_shortcut_title("folder-opened", "Open file"),
+			title: this.getShortcutTitle("folder-opened", "Open file"),
 			tooltip: "Open unit tests file from bin.",
 			command: "rust-tests-bin.open",
 			arguments: [param]
@@ -98,7 +98,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showRenameFile')){	// Only if enabled
 			// Rename file codelens
 			this.codeLenses.push(new vscode.CodeLens(range, {
-				title: this.get_shortcut_title("replace-all", "Rename file"),
+				title: this.getShortcutTitle("replace-all", "Rename file"),
 				tooltip: "Rename tests file from bin.",
 				command: "rust-tests-bin.rename",
 				arguments: [param]
@@ -108,7 +108,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 		if(vscode.workspace.getConfiguration('rust-tests-bin').get<boolean>('display.showDeleteFile')){	// Only if enabled
 			// Delete file codelens
 			this.codeLenses.push(new vscode.CodeLens(range, {
-				title: this.get_shortcut_title("trash", "Delete file"),
+				title: this.getShortcutTitle("trash", "Delete file"),
 				tooltip: "Delete tests file from bin.",
 				command: "rust-tests-bin.delete",
 				arguments: [param]
@@ -121,11 +121,11 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 * @param range Range that codeLens apply to
 	 * @param param Macro parameters.
 	 */
-	private create_codelens_to_create_file(range: vscode.Range, param: [string, vscode.Range | vscode.Position]){
+	private createCodelensToCreateFile(range: vscode.Range, param: [string, vscode.Range | vscode.Position]){
 
 		// Create file codelens
 		this.codeLenses.push(new vscode.CodeLens(range, {
-			title: this.get_shortcut_title("new-file", "Create file"),
+			title: this.getShortcutTitle("new-file", "Create file"),
 			tooltip: "Create unit tests file in bin.",
 			command: "rust-tests-bin.create",
 			arguments: [param]
@@ -138,15 +138,15 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 * @param match Match to verify
 	 * @param comments Array of comments indexes
 	 */
-	private is_commented(index : number, comments : Array<[start : number, end: number]>) : boolean{
+	private isCommented(index : number, comments : Array<[number, number]>) : boolean{
 		
-		let is_commented = false;
+		let isCommented = false;
 		comments.forEach(range => {	// Verify if index is withing range
 			if(index > range[0] && index < range[1])	// index will NEVER be exactly start or end.
-				is_commented = true;
+				{isCommented = true;}
 		});
 
-		return is_commented;
+		return isCommented;
 
 	}
 
@@ -156,7 +156,7 @@ export class TestsBinCodeLensProvider implements vscode.CodeLensProvider {
 	 * @param text Text to show
 	 * @returns status bar text formatted.
 	 */
-	private get_shortcut_title(icon : string, text : string) : string {
+	private getShortcutTitle(icon : string, text : string) : string {
 
 		switch(vscode.workspace.getConfiguration('rust-tests-bin').get<string>('display.shortcutDisplay')){
 			case "Icon only":
