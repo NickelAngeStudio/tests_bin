@@ -3,7 +3,7 @@
   "displayName": "Tests bin for Rust",
   "description": "Official `tests_bin` crate extension for Rust. Provide codeLens shortcut to easily manage unit tests.",
   "version": "1.0.0",
-  "publisher": "NickelAngeStudio",
+  "publisher": "nas",
   "author": {
     "name" : "NickelAngeStudio",
     "url": "https://github.com/NickelAngeStudio"
